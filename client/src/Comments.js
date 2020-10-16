@@ -2,21 +2,36 @@ import React, { useState, useEffect } from "react";
 import "./Comments.css";
 import Axios from "axios";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Link,
+  Route,
+  Switch,
+  useParams,
+} from "react-router-dom";
 import { ArrowLeft } from "react-bootstrap-icons";
 
 export const Comments = (props) => {
   const [comment, setComment] = useState("");
-  const [id, setId] = useState("");
   const [commentList, setCommentList] = useState([]);
+  const [posts, setPost] = useState([]);
+  const commentId = JSON.stringify(
+    props.history.location.pathname.split("/comments/")[1]
+  );
+
   // setId(props.match.params.id);
-  var commentId = props.match.params.id;
-  console.log("id " + commentId);
+  console.log("idx  " + commentId);
 
   useEffect(() => {
-    Axios.get(`http://localhost:3001/api/comments/${commentId}`).then(
+    Axios.get("http://localhost:3001/api/comments/" + commentId).then(
       (response) => {
         setCommentList(response.data);
+      }
+    );
+
+    Axios.get("http://localhost:3001/api/getpost/" + commentId).then(
+      (responses) => {
+        setPost(responses.data);
       }
     );
   }, []);
@@ -29,6 +44,7 @@ export const Comments = (props) => {
         id: commentId,
         comment: comment,
       });
+      setCommentList([...commentList, { comment: comment }]);
     }
   };
 
@@ -42,8 +58,16 @@ export const Comments = (props) => {
       <div class="col">
         <h1>COMMENTS</h1>
       </div>
-
       <div className="form">
+        {posts.map((val) => {
+          console.log("post " + val.title)
+          return (
+            <div className="card">
+              <h2>Post: {val.title}</h2>
+              <p>Description: {val.description}</p>
+            </div>
+          );
+        })}
         <input
           className="comment"
           placeholder="comment"
@@ -57,6 +81,14 @@ export const Comments = (props) => {
         <button className="btn btn-dark" onClick={submitComment}>
           Comment
         </button>
+
+        {commentList.map((val) => {
+          return (
+            <div className="card">
+              <p>{val.comment}</p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

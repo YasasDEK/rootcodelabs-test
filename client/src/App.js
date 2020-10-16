@@ -11,7 +11,7 @@ function App() {
         <Switch>
           <Route path="/addpost" component={AddPost} />
           <Route path="/comments" component={Comments} />
-          <Route path="/" component={Home} />
+          <Route path="/:id" component={Home} />
         </Switch>
       </Router>
     </div>

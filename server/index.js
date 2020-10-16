@@ -22,9 +22,16 @@ app.get('/api/get', (req,res) => {
     });
 })
 
-app.get('/api/comments/', (req,res) => {
-    const sqlSelect = "SELECT comment FROM posts WHERE id = commentId;"
-    db.query(sqlSelect, (err,result) => {
+app.get('/api/getpost/:id', (req,res) => {
+    const sqlSelect = "SELECT * FROM posts WHERE id = ?;"
+    db.query(sqlSelect,[req.params.id], (err,result) => {
+        res.send(result);
+    });
+})
+
+app.get('/api/comments/:id', (req,res) => {
+    const sqlSelect = "SELECT * FROM comments where id = ?;"
+    db.query(sqlSelect,[req.params.id], (err,result) => {
         res.send(result);
     });
 })
@@ -43,12 +50,11 @@ app.post('/api/insertcomment', (req,res) => {
     const id = req.body.id
     const comment = req.body.comment
 
-    const sqlInsert2 = "INSERT INTO comments (id,comment) VALUES (?,?);"
-    db.query(sqlInsert2, [id, comment], (err,result) => {
+    const sqlInsert = "INSERT INTO comments (id, comment) VALUES (?,?);"
+    db.query(sqlInsert, [id, comment], (err,result) => {
         console.log(result);
     })
 });
-
 
 app.listen(3001, () => {
     console.log('running on port 3001')

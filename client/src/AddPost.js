@@ -17,6 +17,7 @@ export const AddPost = () => {
         title: title,
         description: description,
       });
+      alert("Post published");
     }
   };
 
