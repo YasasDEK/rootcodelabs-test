@@ -29,7 +29,7 @@ export const Home = () => {
               <h2>Post: {val.title}</h2>
               <p>Description: {val.description}</p>
               <Link to={'/comments/' + val.id}>
-              COMMENTS
+              ({val.count})COMMENTS
             </Link>
             </div>
           );

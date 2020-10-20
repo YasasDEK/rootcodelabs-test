@@ -22,6 +22,13 @@ app.get('/api/get', (req,res) => {
     });
 })
 
+// app.get('/api/getcount/:id', (req,res) => {
+//     const sqlSelect = "SELECT COUNT(id) FROM comments WHERE id = ?;"
+//     db.query(sqlSelect,[req.params.id], (err,result) => {
+//         res.send(result);
+//     });
+// })
+
 app.get('/api/getpost/:id', (req,res) => {
     const sqlSelect = "SELECT * FROM posts WHERE id = ?;"
     db.query(sqlSelect,[req.params.id], (err,result) => {
@@ -52,6 +59,11 @@ app.post('/api/insertcomment', (req,res) => {
 
     const sqlInsert = "INSERT INTO comments (id, comment) VALUES (?,?);"
     db.query(sqlInsert, [id, comment], (err,result) => {
+        console.log(result);
+    })
+
+    const sqlCount = "UPDATE posts SET count = count + 1 WHERE id = (?);"
+    db.query(sqlCount, [id], (err,result) => {
         console.log(result);
     })
 });

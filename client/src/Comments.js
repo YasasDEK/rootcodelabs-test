@@ -18,22 +18,21 @@ export const Comments = (props) => {
   const commentId = JSON.stringify(
     props.history.location.pathname.split("/comments/")[1]
   );
+  const x = parseInt(commentId.replace(/^"(.*)"$/, "$1"));
 
   // setId(props.match.params.id);
-  console.log("idx  " + commentId);
+  console.log("idx  " + x);
 
   useEffect(() => {
-    Axios.get("http://localhost:3001/api/comments/" + commentId).then(
-      (response) => {
-        setCommentList(response.data);
-      }
-    );
+    Axios.get("http://localhost:3001/api/getpost/" + x).then((responses) => {
+      setPost(responses.data);
+      console.log(responses.data);
+    });
 
-    Axios.get("http://localhost:3001/api/getpost/" + commentId).then(
-      (responses) => {
-        setPost(responses.data);
-      }
-    );
+    Axios.get("http://localhost:3001/api/comments/" + x).then((response) => {
+      setCommentList(response.data);
+      console.log(response.data);
+    });
   }, []);
 
   const submitComment = () => {
@@ -41,7 +40,7 @@ export const Comments = (props) => {
       alert("empty input");
     } else {
       Axios.post("http://localhost:3001/api/insertcomment", {
-        id: commentId,
+        id: x,
         comment: comment,
       });
       setCommentList([...commentList, { comment: comment }]);
@@ -49,7 +48,7 @@ export const Comments = (props) => {
   };
 
   return (
-    <div className="AddPost">
+    <div className="Home">
       <div class="col">
         <Link to="/home">
           <ArrowLeft />
@@ -60,7 +59,7 @@ export const Comments = (props) => {
       </div>
       <div className="form">
         {posts.map((val) => {
-          console.log("post " + val.title)
+          console.log("post " + val.title);
           return (
             <div className="card">
               <h2>Post: {val.title}</h2>
@@ -68,6 +67,15 @@ export const Comments = (props) => {
             </div>
           );
         })}
+
+        {commentList.map((val) => {
+          return (
+            <div className="card2">
+              <p>{val.comment}</p>
+            </div>
+          );
+        })}
+
         <input
           className="comment"
           placeholder="comment"
@@ -81,14 +89,6 @@ export const Comments = (props) => {
         <button className="btn btn-dark" onClick={submitComment}>
           Comment
         </button>
-
-        {commentList.map((val) => {
-          return (
-            <div className="card">
-              <p>{val.comment}</p>
-            </div>
-          );
-        })}
       </div>
     </div>
   );
